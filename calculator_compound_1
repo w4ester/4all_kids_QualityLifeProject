@@ -1,0 +1,247 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Fun Financial Literacy for Kids</title>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/3.7.0/chart.min.js"></script>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #f0f8ff;
+            margin: 0;
+            padding: 20px;
+        }
+        .container {
+            max-width: 800px;
+            margin: 0 auto;
+            background-color: white;
+            padding: 20px;
+            border-radius: 10px;
+            box-shadow: 0 0 10px rgba(0,0,0,0.1);
+        }
+        h1, h2 {
+            color: #4a4a4a;
+            text-align: center;
+        }
+        .calculator {
+            margin-bottom: 30px;
+            padding: 20px;
+            background-color: #e6f7ff;
+            border-radius: 8px;
+            position: relative;
+            overflow: hidden;
+        }
+        input {
+            width: calc(100% - 22px);
+            padding: 10px;
+            margin: 10px 0;
+            border: 1px solid #ddd;
+            border-radius: 4px;
+        }
+        button {
+            background-color: #4CAF50;
+            color: white;
+            padding: 10px 20px;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+            font-size: 16px;
+            margin: 5px;
+        }
+        button:hover {
+            background-color: #45a049;
+        }
+        #result, #dayByDayResult {
+            margin-top: 20px;
+            font-weight: bold;
+        }
+        .chart-container {
+            position: relative;
+            height: 300px;
+            width: 100%;
+        }
+        #dayByDayContainer {
+            max-height: 300px;
+            overflow-y: auto;
+            border: 1px solid #ddd;
+            padding: 10px;
+            margin-top: 10px;
+            background-color: rgba(255, 255, 255, 0.8);
+        }
+        .hidden {
+            display: none;
+        }
+        .theme-selector {
+            display: flex;
+            justify-content: center;
+            margin-bottom: 20px;
+        }
+        .theme-button {
+            width: 60px;
+            height: 60px;
+            margin: 0 10px;
+            border: none;
+            border-radius: 50%;
+            cursor: pointer;
+            font-size: 24px;
+        }
+        .theme-dino {
+            background-color: #7cb342;
+        }
+        .theme-undies {
+            background-color: #ff8a80;
+        }
+        .theme-smiley {
+            background-color: #ffd54f;
+        }
+        .themed-element {
+            position: absolute;
+            width: 40px;
+            height: 40px;
+            background-size: contain;
+            background-repeat: no-repeat;
+            z-index: 1;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>🌟 Fun Money Learning for Kids 🌟</h1>
+        
+        <div class="theme-selector">
+            <button class="theme-button theme-dino" onclick="setTheme('dino')">🦖</button>
+            <button class="theme-button theme-undies" onclick="setTheme('undies')">🩲</button>
+            <button class="theme-button theme-smiley" onclick="setTheme('smiley')">😃</button>
+        </div>
+
+        <div id="compoundInterestCalculator" class="calculator">
+            <h2>💰 Magic Money Growth Machine 💰</h2>
+            <input type="number" id="principal" placeholder="Starting coins (e.g., 1 for a penny)">
+            <input type="number" id="rate" placeholder="Daily growth magic (e.g., 100 for doubling)">
+            <input type="number" id="time" placeholder="Number of days">
+            <button onclick="calculateCompoundInterest()">See the Magic!</button>
+            <div id="compoundResult"></div>
+            <div class="chart-container">
+                <canvas id="compoundChart"></canvas>
+            </div>
+            <button onclick="revealDayByDay()">Show Day by Day</button>
+            <button onclick="toggleDayByDay()">Hide/Show Answers</button>
+            <div id="dayByDayContainer" class="hidden"></div>
+        </div>
+    </div>
+
+    <script>
+        let compoundChart;
+        let dayByDayData = [];
+        let currentTheme = '';
+
+        function setTheme(theme) {
+            const calculator = document.getElementById('compoundInterestCalculator');
+            calculator.style.transition = 'background-color 0.5s ease';
+            
+            // Remove existing themed elements
+            const existingElements = calculator.getElementsByClassName('themed-element');
+            while(existingElements.length > 0){
+                existingElements[0].parentNode.removeChild(existingElements[0]);
+            }
+
+            // Set new theme
+            switch(theme) {
+                case 'dino':
+                    calculator.style.backgroundColor = '#c8e6c9';
+                    addThemedElements('🦖', 10);
+                    break;
+                case 'undies':
+                    calculator.style.backgroundColor = '#ffcdd2';
+                    addThemedElements('🩲', 10);
+                    break;
+                case 'smiley':
+                    calculator.style.backgroundColor = '#fff9c4';
+                    addThemedElements('😃', 10);
+                    break;
+                default:
+                    calculator.style.backgroundColor = '#e6f7ff';
+            }
+            currentTheme = theme;
+        }
+
+        function addThemedElements(emoji, count) {
+            const calculator = document.getElementById('compoundInterestCalculator');
+            for (let i = 0; i < count; i++) {
+                const element = document.createElement('div');
+                element.className = 'themed-element';
+                element.textContent = emoji;
+                element.style.left = Math.random() * 100 + '%';
+                element.style.top = Math.random() * 100 + '%';
+                calculator.appendChild(element);
+            }
+        }
+
+        function calculateCompoundInterest() {
+            const principal = parseFloat(document.getElementById('principal').value);
+            const rate = parseFloat(document.getElementById('rate').value) / 100;
+            const time = parseFloat(document.getElementById('time').value);
+
+            const amount = principal * Math.pow((1 + rate), time);
+            document.getElementById('compoundResult').innerHTML = `Wow! After ${time} days, you'll have ${amount.toFixed(2)} coins!`;
+
+            updateChart(compoundChart, 'compoundChart', principal, amount, time, 'Magic Money Growth');
+            
+            // Prepare day-by-day data
+            dayByDayData = Array.from({length: time + 1}, (_, i) => {
+                const dailyAmount = principal * Math.pow((1 + rate), i);
+                return `Day ${i}: ${dailyAmount.toFixed(2)} coins`;
+            });
+        }
+
+        function revealDayByDay() {
+            const container = document.getElementById('dayByDayContainer');
+            container.innerHTML = dayByDayData.join('<br>');
+            container.classList.remove('hidden');
+        }
+
+        function toggleDayByDay() {
+            const container = document.getElementById('dayByDayContainer');
+            container.classList.toggle('hidden');
+        }
+
+        function updateChart(chart, canvasId, start, end, time, label) {
+            const ctx = document.getElementById(canvasId).getContext('2d');
+            
+            if (chart) {
+                chart.destroy();
+            }
+
+            const labels = Array.from({length: time + 1}, (_, i) => i.toString());
+            const data = Array.from({length: time + 1}, (_, i) => start * Math.pow((end/start), i/time));
+
+            chart = new Chart(ctx, {
+                type: 'line',
+                data: {
+                    labels: labels,
+                    datasets: [{
+                        label: label,
+                        data: data,
+                        borderColor: 'rgb(75, 192, 192)',
+                        tension: 0.1
+                    }]
+                },
+                options: {
+                    responsive: true,
+                    scales: {
+                        y: {
+                            beginAtZero: true
+                        }
+                    }
+                }
+            });
+
+            return chart;
+        }
+
+        // Initialize with default theme
+        setTheme('dino');
+    </script>
+</body>
+</html>

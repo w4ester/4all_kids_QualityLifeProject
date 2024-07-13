@@ -1,0 +1,208 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>The Magic Piggy Bank: A Bedtime Story</title>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/3.7.0/chart.min.js"></script>
+    <style>
+        body {
+            font-family: 'Comic Sans MS', cursive, sans-serif;
+            background-color: #f0f8ff;
+            margin: 0;
+            padding: 20px;
+            color: #333;
+        }
+        .container {
+            max-width: 800px;
+            margin: 0 auto;
+            background-color: white;
+            padding: 20px;
+            border-radius: 10px;
+            box-shadow: 0 0 10px rgba(0,0,0,0.1);
+        }
+        h1, h2 {
+            color: #4a4a4a;
+            text-align: center;
+        }
+        .story-section, .calculator {
+            margin-bottom: 30px;
+            padding: 20px;
+            background-color: #e6f7ff;
+            border-radius: 8px;
+            position: relative;
+            overflow: hidden;
+        }
+        input, select {
+            width: calc(100% - 22px);
+            padding: 10px;
+            margin: 10px 0;
+            border: 1px solid #ddd;
+            border-radius: 4px;
+            font-size: 16px;
+        }
+        button {
+            background-color: #4CAF50;
+            color: white;
+            padding: 10px 20px;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+            font-size: 16px;
+            margin: 5px;
+        }
+        button:hover {
+            background-color: #45a049;
+        }
+        #result, #dayByDayResult {
+            margin-top: 20px;
+            font-weight: bold;
+        }
+        .chart-container {
+            position: relative;
+            height: 300px;
+            width: 100%;
+            margin-top: 20px;
+        }
+        #dayByDayContainer {
+            max-height: 300px;
+            overflow-y: auto;
+            border: 1px solid #ddd;
+            padding: 10px;
+            margin-top: 10px;
+            background-color: rgba(255, 255, 255, 0.8);
+        }
+        .hidden {
+            display: none;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>🐷 The Magic Piggy Bank: A Bedtime Story 🌙</h1>
+        
+        <div class="story-section">
+            <h2>Chapter 1: A Special Gift</h2>
+            <p>Once upon a time, in a cozy little house, a beautiful baby named June was born. On the day of June's birth, the whole family gathered to celebrate. June's Muggs had a twinkle in her eye as she presented a special gift - a magical piggy bank.</p>
+            <p>"This is a very special piggy bank," Muggs explained. "It's filled with more than love...there is a little magic. If we put some money in it today, it will grow and grow, just like June!"</p>
+            <button onclick="revealNextChapter()">Continue the story</button>
+        </div>
+
+        <div id="calculator" class="calculator hidden">
+            <h2>💰 The Magic Piggy Bank Calculator 💰</h2>
+            <input type="number" id="principal" placeholder="Starting amount (e.g., 75000)">
+            <input type="number" id="rate" placeholder="Annual interest rate (e.g., 10 for 10%)">
+            <input type="number" id="time" placeholder="Number of years">
+            <select id="compoundFrequency">
+                <option value="1">Annually</option>
+                <option value="2">Semi-annually</option>
+                <option value="4">Quarterly</option>
+                <option value="12">Monthly</option>
+                <option value="365">Daily</option>
+            </select>
+            <button onclick="calculateCompoundInterest()">See the Magic!</button>
+            <button onclick="doubleInitialAmount()">Double Initial Amount</button>
+            <div id="result"></div>
+            <div class="chart-container">
+                <canvas id="growthChart"></canvas>
+            </div>
+            <button onclick="revealYearByYear()">Reveal Year by Year</button>
+            <div id="yearByYearContainer" class="hidden"></div>
+        </div>
+    </div>
+
+    <script>
+        let currentChapter = 1;
+        let growthChart;
+
+        function revealNextChapter() {
+            currentChapter++;
+            const storySection = document.querySelector('.story-section');
+            const calculator = document.getElementById('calculator');
+            
+            switch(currentChapter) {
+                case 2:
+                    storySection.innerHTML = `
+                        <h2>Chapter 2: The Family's Love</h2>
+                        <p>June's parents and grandparents decided to make the gift even more special. They agreed to put $75,000 into the magical piggy bank. "This money will grow over time," June's dad said, "and it will help June when it's time for college or to start a career."</p>
+                        <p>But how much would it grow? Let's use our magical calculator to find out!</p>
+                        <button onclick="revealNextChapter()">Continue the story</button>
+                    `;
+                    break;
+                case 3:
+                    storySection.classList.add('hidden');
+                    calculator.classList.remove('hidden');
+                    break;
+            }
+        }
+
+        function calculateCompoundInterest() {
+            const principal = parseFloat(document.getElementById('principal').value);
+            const rate = parseFloat(document.getElementById('rate').value) / 100;
+            const time = parseFloat(document.getElementById('time').value);
+            const compoundFrequency = parseFloat(document.getElementById('compoundFrequency').value);
+
+            const amount = principal * Math.pow((1 + rate/compoundFrequency), (compoundFrequency*time));
+            document.getElementById('result').innerHTML = `Wow! After ${time} years, Alex will have $${amount.toFixed(2)}!`;
+
+            updateChart(growthChart, 'growthChart', principal, amount, time, 'Alex\'s Savings Growth');
+            
+            // Prepare year-by-year data
+            window.yearByYearData = Array.from({length: time + 1}, (_, i) => {
+                const yearAmount = principal * Math.pow((1 + rate/compoundFrequency), (compoundFrequency*i));
+                return `Year ${i}: $${yearAmount.toFixed(2)}`;
+            });
+        }
+
+        function doubleInitialAmount() {
+            const principalInput = document.getElementById('principal');
+            principalInput.value = (parseFloat(principalInput.value) * 2).toString();
+        }
+
+        function revealYearByYear() {
+            const container = document.getElementById('yearByYearContainer');
+            container.innerHTML = window.yearByYearData.join('<br>');
+            container.classList.remove('hidden');
+        }
+
+        function updateChart(chart, canvasId, start, end, time, label) {
+            const ctx = document.getElementById(canvasId).getContext('2d');
+            
+            if (chart) {
+                chart.destroy();
+            }
+
+            const labels = Array.from({length: time + 1}, (_, i) => i.toString());
+            const data = Array.from({length: time + 1}, (_, i) => start * Math.pow((end/start), i/time));
+
+            chart = new Chart(ctx, {
+                type: 'line',
+                data: {
+                    labels: labels,
+                    datasets: [{
+                        label: label,
+                        data: data,
+                        borderColor: 'rgb(75, 192, 192)',
+                        tension: 0.1
+                    }]
+                },
+                options: {
+                    responsive: true,
+                    scales: {
+                        y: {
+                            beginAtZero: true,
+                            ticks: {
+                                callback: function(value, index, values) {
+                                    return '$' + value.toLocaleString();
+                                }
+                            }
+                        }
+                    }
+                }
+            });
+
+            return chart;
+        }
+    </script>
+</body>
+</html>
