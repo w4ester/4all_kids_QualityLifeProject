@@ -1,0 +1,78 @@
+// findRepresentatives.test.js
+global.fetch = require('jest-fetch-mock'); // You need jest-fetch-mock to mock fetch
+
+// Mock findRepresentatives function
+function findRepresentatives() {
+    const address = document.getElementById('address').value;
+    const repList = document.getElementById('representatives-list');
+    repList.innerHTML = "<p>Searching for representatives...</p>";
+    
+    fetch(`https://civicinfo.googleapis.com/civicinfo/v2/representatives?address=${encodeURIComponent(address)}&key=YOUR_API_KEY`)
+        .then(response => response.json())
+        .then(data => {
+            repList.innerHTML = "<h3>Your Representatives:</h3>";
+            data.officials.forEach((official, index) => {
+                repList.innerHTML += `<p>${data.offices[index].name}: ${official.name} - ${official.phones[0]}</p>`;
+            });
+        })
+        .catch(error => {
+            repList.innerHTML = "<p>Error finding representatives. Please try again.</p>";
+            console.error('Error:', error);
+        });
+}
+
+describe('findRepresentatives', () => {
+    beforeEach(() => {
+        fetch.resetMocks();
+    });
+
+    test('fetches and displays representatives', async () => {
+        // Mock the API response
+        fetch.mockResponseOnce(JSON.stringify({
+            offices: [{ name: 'Senator' }, { name: 'Representative' }],
+            officials: [
+                { name: 'John Doe', phones: ['123-456-7890'] },
+                { name: 'Jane Doe', phones: ['098-765-4321'] }
+            ]
+        }));
+
+        // Set up our document body
+        document.body.innerHTML = `
+            <input type="text" id="address" value="123 Main St, City, State ZIP">
+            <div id="representatives-list"></div>
+        `;
+
+        // Call the function
+        await findRepresentatives();
+
+        // Check that fetch was called correctly
+        expect(fetch).toHaveBeenCalledTimes(1);
+        expect(fetch).toHaveBeenCalledWith(
+            'https://civicinfo.googleapis.com/civicinfo/v2/representatives?address=123%20Main%20St,%20City,%20State%20ZIP&key=YOUR_API_KEY'
+        );
+
+        // Check that the representatives were displayed
+        expect(document.getElementById('representatives-list').innerHTML).toEqual(
+            '<h3>Your Representatives:</h3><p>Senator: John Doe - 123-456-7890</p><p>Representative: Jane Doe - 098-765-4321</p>'
+        );
+    });
+
+    test('handles errors gracefully', async () => {
+        // Mock a failed API response
+        fetch.mockReject(new Error('Failed to fetch'));
+
+        // Set up our document body
+        document.body.innerHTML = `
+            <input type="text" id="address" value="123 Main St, City, State ZIP">
+            <div id="representatives-list"></div>
+        `;
+
+        // Call the function
+        await findRepresentatives();
+
+        // Check that the error message was displayed
+        expect(document.getElementById('representatives-list').innerHTML).toEqual(
+            '<p>Error finding representatives. Please try again.</p>'
+        );
+    });
+});
