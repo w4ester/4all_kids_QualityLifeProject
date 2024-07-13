@@ -3,11 +3,13 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>June's Magical Piggy Bank: A Financial Journey</title>
+    <title>June's Magical Journey: A Financial Adventure</title>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/3.7.0/chart.min.js"></script>
+    <link rel="stylesheet" href="https://unpkg.com/leaflet@1.7.1/dist/leaflet.css" />
+    <script src="https://unpkg.com/leaflet@1.7.1/dist/leaflet.js"></script>
     <style>
         body {
-            font-family: 'Comic Sans MS', cursive, sans-serif;
+            font-family: 'Comic Sans MS', 'Times New Roman', Times, serif, sans-serif;
             background-color: #f0f8ff;
             margin: 0;
             padding: 20px;
@@ -21,14 +23,14 @@
             border-radius: 10px;
             box-shadow: 0 0 10px rgba(0,0,0,0.1);
         }
-        .logo {
-            display: block;
-            margin: 0 auto 20px;
-            max-width: 200px;
-        }
         h1, h2 {
             color: #4a4a4a;
             text-align: center;
+        }
+        .logo {
+            display: block;
+            margin: 0 auto;
+            max-width: 200px;
         }
         .story-section, .calculator, .resources, .contact-reps {
             margin-bottom: 30px;
@@ -38,10 +40,16 @@
             position: relative;
             overflow: hidden;
         }
+        .input-group {
+            margin-bottom: 10px;
+        }
+        .input-group label {
+            display: block;
+            margin-bottom: 5px;
+        }
         input, select, textarea {
-            width: calc(100% - 22px);
-            padding: 10px;
-            margin: 10px 0;
+            width: 100%;
+            padding: 8px;
             border: 1px solid #ddd;
             border-radius: 4px;
             font-size: 16px;
@@ -54,7 +62,7 @@
             border-radius: 4px;
             cursor: pointer;
             font-size: 16px;
-            margin: 5px;
+            margin-top: 10px;
         }
         button:hover {
             background-color: #45a049;
@@ -70,7 +78,7 @@
             margin-top: 20px;
         }
         #yearByYearContainer {
-            max-height: 300px;
+            max-height: 200px;
             overflow-y: auto;
             border: 1px solid #ddd;
             padding: 10px;
@@ -91,92 +99,113 @@
             color: #e25555;
         }
         .email-buttons {
-            display: flex;
-            justify-content: space-around;
-            margin-top: 20px;
+    margin-top: 20px;
+}
+
+.email-buttons button {
+    margin-right: 10px;
+    padding: 10px 15px;
+    background-color: #4CAF50;
+    color: white;
+    border: none;
+    border-radius: 4px;
+    cursor: pointer;
+}
+
+.email-buttons button:hover {
+    background-color: #45a049;
+} 
+        #map {
+            height: 400px;
+            width: 100%;
+            margin-bottom: 20px;
         }
-        .email-button {
-            padding: 10px 20px;
-            border: none;
-            border-radius: 5px;
-            color: white;
-            font-weight: bold;
-            cursor: pointer;
-        }
-        .gmail { background-color: #D44638; }
-        .outlook { background-color: #0072C6; }
-        .yahoo { background-color: #720E9E; }
     </style>
 </head>
 <body>
     <div class="container">
-        <img src="./logo.png" alt="Logo" class="logo">
-        <h1>June's Magical Piggy Bank: A Financial Journey</h1>
+        <img src="logo.png" alt="Journey Logo" class="logo">
+        <h1>June's Magical Journey: A Financial Adventure</h1>
         
         <div class="story-section">
             <h2>Chapter 1: A Special Gift</h2>
-            <p>Once upon a time, in a cozy little house, a beautiful baby named June was born. On the day of June's birth, the whole family gathered to celebrate. June's grandmother, lovingly called Muggs, had a twinkle in her eye as she presented a special gift - a magical piggy bank.</p>
-            <p>"This isn't just any piggy bank," Muggs explained. "It's filled with love and a little bit of magic. If we put some money in it today, it will grow and grow, just like June!"</p>
-            <button onclick="nextChapter()">Continue the story</button>
+            <p>Once upon a time, in a cozy little house, a beautiful baby named June was born. On the day of June's birth, the whole family gathered to celebrate. June's grandmother, lovingly called Muggs, had a twinkle in her eye as she presented a special gift - a magical savings account.</p>
+            <p>"This isn't just any account," Muggs explained. "It's filled with love and a little bit of magic. If we put some money in it today, it will grow and grow, just like June!"</p>
+            <button onclick="revealNextChapter()">Continue the story</button>
         </div>
 
         <div id="pennyCalculator" class="calculator hidden">
             <h2>🪙 The Magic Penny Calculator 🪙</h2>
-            <input type="number" id="days" placeholder="Number of days (max 30)" max="30">
+            <div class="input-group">
+                <label for="days">Number of days (max 30):</label>
+                <input type="number" id="days" placeholder="Enter days (1-30)" max="30" min="1">
+            </div>
             <button onclick="calculatePennyGrowth()">Double the Penny!</button>
             <div id="pennyResult"></div>
         </div>
 
         <div id="realisticCalculator" class="calculator hidden">
             <h2>💰 June's Growing Savings Calculator 💰</h2>
-            <input type="number" id="principal" placeholder="Starting amount (e.g., 75000)" value="75000">
-            <input type="number" id="rate" placeholder="Annual interest rate (e.g., 7 for 7%)" value="7">
-            <input type="number" id="years" placeholder="Number of years" value="18">
-            <input type="number" id="annualContribution" placeholder="Annual contribution" value="5000">
-            <select id="compoundFrequency">
-                <option value="1">Annually</option>
-                <option value="2">Semi-annually</option>
-                <option value="4">Quarterly</option>
-                <option value="12">Monthly</option>
-                <option value="365">Daily</option>
-            </select>
+            <div class="input-group">
+                <label for="principal">Starting amount ($):</label>
+                <input type="number" id="principal" placeholder="e.g., 75000" value="75000">
+            </div>
+            <div class="input-group">
+                <label for="rate">Annual interest rate (%):</label>
+                <input type="number" id="rate" placeholder="e.g., 7 for 7%" value="7" step="0.1">
+            </div>
+            <div class="input-group">
+                <label for="years">Number of years to save:</label>
+                <input type="number" id="years" placeholder="e.g., 18" value="18">
+            </div>
+            <div class="input-group">
+                <label for="annualContribution">Annual contribution ($):</label>
+                <input type="number" id="annualContribution" placeholder="e.g., 5000" value="5000">
+            </div>
+            <div class="input-group">
+                <label for="compoundFrequency">Compound frequency:</label>
+                <select id="compoundFrequency">
+                    <option value="1">Annually</option>
+                    <option value="2">Semi-annually</option>
+                    <option value="4">Quarterly</option>
+                    <option value="12">Monthly</option>
+                    <option value="365">Daily</option>
+                </select>
+            </div>
             <button onclick="calculateRealisticGrowth()">See June's Savings Grow!</button>
             <div id="realisticResult"></div>
+            <button onclick="revealYearByYear()" id="revealButton">Reveal Year by Year</button>
+            <div id="yearByYearContainer" class="hidden"></div>
             <div class="chart-container">
                 <canvas id="growthChart"></canvas>
             </div>
-            <button onclick="revealYearByYear()">Reveal Year by Year</button>
-            <div id="yearByYearContainer" class="hidden"></div>
         </div>
-
         <div class="contact-reps hidden">
             <h2>📬 Let Your Voice Be Heard! 📬</h2>
-            <p>Now that you've learned about the power of saving, why not share your thoughts with your representatives? They can help make laws like the "June Law" a reality!</p>
-            <div class="input-group">
-                <label for="address">Enter your address:</label>
-                <input type="text" id="address" placeholder="123 Main St, City, State ZIP">
-            </div>
-            <button onclick="findRepresentatives()">Find My Representatives</button>
+            <p>Click on the map to find your representatives and send them a message about June's Law!</p>
+            <div id="map"></div>
             <div id="representatives-list"></div>
             <h3>Sample Letter Template</h3>
-            <textarea id="letterTemplate" rows="10" readonly>
-Dear [Representative's Name],
+            <textarea id="letter-template" rows="15" readonly>
+Dear Representative [Representative's Name],
 
-I'm [Your Name] from [Your City]. I've learned about the importance of financial literacy for children. Could you support programs like the "June Law" for child savings accounts?
-
-Thank you for your time and consideration.
+I am writing to urge your support for an initiative we are calling June's Law, which aims to mandate financial literacy education in schools and establish mutual fund savings accounts for every child in America. By equipping our youth with essential financial skills and providing them with a tangible start toward economic stability, we can ensure all children have the opportunity for a secure and prosperous future. Your support for this initiative will help reduce economic inequality and empower the next generation to achieve a high quality of life. Thank you for championing the cause of our children's financial well-being.
 
 Sincerely,
-[Your Name]
-            </textarea>
-            <button onclick="copyTemplate()">Copy Template</button>
-            <div class="email-buttons">
-                <button class="email-button gmail" onclick="openEmail('gmail')">Use Gmail</button>
-                <button class="email-button outlook" onclick="openEmail('outlook')">Use Outlook</button>
-                <button class="email-button yahoo" onclick="openEmail('yahoo')">Use Yahoo</button>
-            </div>
-        </div>
 
+[Your Name]
+[Your Address]
+[City, State, ZIP Code]
+[Email Address]
+[Phone Number]
+    </textarea>
+        <button onclick="copyTemplate()">Copy Template</button>
+    <div class="email-buttons">
+        <button onclick="openEmailClient('gmail')">Send with Gmail</button>
+        <button onclick="openEmailClient('yahoo')">Send with Yahoo</button>
+        <button onclick="openEmailClient('outlook')">Send with Outlook</button>
+    </div>
+</div>
         <div class="resources hidden">
             <h2>📚 Learn More and Have Fun! 📚</h2>
             <p>Want to continue your financial journey? Check out these resources:</p>
@@ -195,84 +224,76 @@ Sincerely,
     <script>
         let currentChapter = 1;
         let growthChart;
+        let map;
 
-        function nextChapter() {
-            currentChapter++;
-            updateStory();
-        }
-
-        function previousChapter() {
-            if (currentChapter > 1) {
-                currentChapter--;
-                updateStory();
-            }
-        }
-
-        function updateStory() {
-            const storySection = document.querySelector('.story-section');
-            const pennyCalculator = document.getElementById('pennyCalculator');
-            const realisticCalculator = document.getElementById('realisticCalculator');
-            const contactReps = document.querySelector('.contact-reps');
-            const resources = document.querySelector('.resources');
-            
-            storySection.innerHTML = '';
+        function revealNextChapter() {
+    const storySection = document.querySelector('.story-section');
+    const pennyCalculator = document.getElementById('pennyCalculator');
+    const realisticCalculator = document.getElementById('realisticCalculator');
+    const contactReps = document.querySelector('.contact-reps');
+    const resources = document.querySelector('.resources');
+    
+    switch(currentChapter) {
+        case 1:
+            storySection.innerHTML = `
+                <h2>Chapter 1: A Special Gift</h2>
+                <p>Once upon a time, in a cozy little house, a beautiful baby named June was born. On the day of June's birth, the whole family gathered to celebrate. June's grandmother, lovingly called Muggs, had a twinkle in her eye as she presented a special gift - a magical savings account.</p>
+                <p>"This isn't just any account," Muggs explained. "It's filled with love and a little bit of magic. If we put some money in it today, it will grow and grow, just like June!"</p>
+                <button onclick="revealNextChapter()">Continue the story</button>
+            `;
+            break;
+        case 2:
+            storySection.innerHTML = `
+                <h2>Chapter 2: The Family's Love</h2>
+                <p>June's parents and grandparents decided to make the gift even more special. They agreed to put $75,000 into the magical savings account. "This money will grow over time," June's dad said, "and it will help June when it's time for college or to start a career."</p>
+                <p>But first, let's see how magical compound interest can be with just a penny!</p>
+                <button onclick="revealNextChapter()">Continue the story</button>
+            `;
+            pennyCalculator.classList.remove('hidden');
+            break;
+        case 3:
+            storySection.innerHTML = `
+                <h2>Chapter 3: June Goes to College</h2>
+                <p>Years passed, and June grew into a bright young woman. Thanks to her family's gift and smart saving, she had enough money for college tuition and even a down payment on a house near campus. June rented out rooms to her classmates, covering her mortgage and adding to her savings.</p>
+                <p>Let's see how June's savings have grown over the years!</p>
+                <button onclick="revealNextChapter()">Continue the story</button>
+            `;
             pennyCalculator.classList.add('hidden');
-            realisticCalculator.classList.add('hidden');
-            contactReps.classList.add('hidden');
-            resources.classList.add('hidden');
+            realisticCalculator.classList.remove('hidden');
+            calculateRealisticGrowth(); // Initialize with default values
+            break;
+        case 4:
+            storySection.innerHTML = `
+                <h2>Chapter 4: Senator June and the June Law</h2>
+                <p>After graduating debt-free and starting a successful career, June never forgot the gift that changed her life. She became a Senator and worked tirelessly to pass the "June Law," ensuring every child would receive a savings account at birth, just like she did.</p>
+                <p>Years later, as a grandmother herself, June sat down with her grandchildren to explain how a little saving and a lot of love can change the world.</p>
+                <p>The End</p>
+                <button onclick="returnToStart()">Return to Start</button>
+            `;
+            contactReps.classList.remove('hidden');
+            resources.classList.remove('hidden');
+            initMap();
+            break;
+        default:
+            console.log("Story has ended");
+    }
+    currentChapter++;
+}
 
-            switch(currentChapter) {
-                case 1:
-                    storySection.innerHTML = `
-                        <h2>Chapter 1: A Special Gift</h2>
-                        <p>Once upon a time, in a cozy little house, a beautiful baby named June was born. On the day of June's birth, the whole family gathered to celebrate. June's grandmother, lovingly called Muggs, had a twinkle in her eye as she presented a special gift - a magical piggy bank.</p>
-                        <p>"This isn't just any piggy bank," Muggs explained. "It's filled with love and a little bit of magic. If we put some money in it today, it will grow and grow, just like June!"</p>
-                        <button onclick="nextChapter()">Continue the story</button>
-                    `;
-                    break;
-                case 2:
-                    storySection.innerHTML = `
-                        <h2>Chapter 2: The Family's Love</h2>
-                        <p>June's parents and grandparents decided to make the gift even more special. They agreed to put $75,000 into the magical piggy bank. "This money will grow over time," June's dad said, "and it will help June when it's time for college or to start a career."</p>
-                        <p>But first, let's see how magical compound interest can be with just a penny!</p>
-                        <button onclick="previousChapter()">Previous</button>
-                        <button onclick="nextChapter()">Continue the story</button>
-                    `;
-                    pennyCalculator.classList.remove('hidden');
-                    break;
-                case 3:
-                    storySection.innerHTML = `
-                        <h2>Chapter 3: June Goes to College</h2>
-                        <p>Years passed, and June grew into a bright young woman. Thanks to her family's gift and smart saving, she had enough money for college tuition and even a down payment on a house near campus. June rented out rooms to her classmates, covering her mortgage and adding to her savings.</p>
-                        <p>Let's see how June's savings have grown over the years!</p>
-                        <button onclick="previousChapter()">Previous</button>
-                        <button onclick="nextChapter()">Continue the story</button>
-                    `;
-                    realisticCalculator.classList.remove('hidden');
-                    break;
-                case 4:
-                    storySection.innerHTML = `
-                        <h2>Chapter 4: Senator June and the June Law</h2>
-                        <p>After graduating debt-free and starting a successful career as a lawyer, June never forgot the gift that changed her life. She became a Senator and worked tirelessly to pass the "June Law," signed into law by President Jann, ensuring every child would receive a savings account at birth, just like she did.</p>
-                        <p>Years later, as a grandmother herself, June sat down with her grandchildren to explain how a little saving and a lot of love can change the world.</p>
-                        <p>The End</p>
-                        <button onclick="previousChapter()">Previous</button>
-                    `;
-                    contactReps.classList.remove('hidden');
-                    resources.classList.remove('hidden');
-                    break;
-            }
-        }
+function returnToStart() {
+    currentChapter = 1;
+    const pennyCalculator = document.getElementById('pennyCalculator');
+    const realisticCalculator = document.getElementById('realisticCalculator');
+    const contactReps = document.querySelector('.contact-reps');
+    const resources = document.querySelector('.resources');
 
-        function calculatePennyGrowth() {
-            const days = Math.min(parseInt(document.getElementById('days').value), 30);
-            const amount = 0.01 * Math.pow(2, days - 1);
-            document.getElementById('pennyResult').innerHTML = `Wow! After ${days} days of doubling, your penny would grow to $${amount.toLocaleString('en-US', {minimumFractionDigits: 2, maximumFractionDigits: 2})}!`;
-            if (days === 30) {
-                document.getElementById('pennyResult').innerHTML += "<br>That's $5,368,709.12 after 30 days!";
-            }
-        }
+    pennyCalculator.classList.add('hidden');
+    realisticCalculator.classList.add('hidden');
+    contactReps.classList.add('hidden');
+    resources.classList.add('hidden');
 
+    revealNextChapter();
+}
         function calculateRealisticGrowth() {
             const principal = parseFloat(document.getElementById('principal').value);
             const rate = parseFloat(document.getElementById('rate').value) / 100;
@@ -284,7 +305,7 @@ Sincerely,
             const yearlyTotals = [principal];
 
             for (let year = 1; year <= years; year++) {
-                total = total * Math.pow((1 + rate/compoundFrequency), compoundFrequency) + annualContribution;
+                total = (total + annualContribution) * Math.pow((1 + rate/compoundFrequency), compoundFrequency);
                 yearlyTotals.push(total);
             }
 
@@ -295,6 +316,8 @@ Sincerely,
             window.yearByYearData = yearlyTotals.map((amount, index) => 
                 `Year ${index}: $${amount.toLocaleString('en-US', {minimumFractionDigits: 2, maximumFractionDigits: 2})}`
             );
+            
+            document.getElementById('revealButton').style.display = 'block';
         }
 
         function revealYearByYear() {
@@ -310,7 +333,7 @@ Sincerely,
                 chart.destroy();
             }
 
-            chart = new Chart(ctx, {
+            return new Chart(ctx, {
                 type: 'line',
                 data: {
                     labels: data.map((_, index) => index.toString()),
@@ -319,71 +342,77 @@ Sincerely,
                         data: data,
                         borderColor: 'rgb(75, 192, 192)',
                         tension: 0.1
-                }]
-            },
-            options: {
-                responsive: true,
-                scales: {
-                    y: {
-                        beginAtZero: true,
-                        ticks: {
-                            callback: function(value, index, values) {
-                                return '$' + value.toLocaleString();
+                    }]
+                },
+                options: {
+                    responsive: true,
+                    scales: {
+                        y: {
+                            beginAtZero: true,
+                            ticks: {
+                                callback: function(value, index, values) {
+                                    return '$' + value.toLocaleString();
+                                }
                             }
                         }
                     }
                 }
-            }
-        });
-
-        return chart;
-    }
-
-    function findRepresentatives() {
-        const address = document.getElementById('address').value;
-        const repList = document.getElementById('representatives-list');
-        repList.innerHTML = "<p>Searching for representatives...</p>";
-        
-        fetch(`https://civicinfo.googleapis.com/civicinfo/v2/representatives?address=${encodeURIComponent(address)}&key=YOUR_API_KEY`)
-            .then(response => response.json())
-            .then(data => {
-                repList.innerHTML = "<h3>Your Representatives:</h3>";
-                data.officials.forEach((official, index) => {
-                    repList.innerHTML += `<p>${data.offices[index].name}: ${official.name} - ${official.phones[0]}</p>`;
-                });
-            })
-            .catch(error => {
-                repList.innerHTML = "<p>Error finding representatives. Please try again.</p>";
-                console.error('Error:', error);
             });
-    }
-
-    function copyTemplate() {
-        const copyText = document.getElementById("letterTemplate");
-        copyText.select();
-        document.execCommand("copy");
-        alert("Letter template copied to clipboard!");
-    }
-
-    function openEmail(provider) {
-        let subject = encodeURIComponent("Support for Child Savings Accounts - The June Law");
-        let body = encodeURIComponent(document.getElementById("letterTemplate").value);
-        let url;
-
-        switch(provider) {
-            case 'gmail':
-                url = `https://mail.google.com/mail/?view=cm&fs=1&su=${subject}&body=${body}`;
-                break;
-            case 'outlook':
-                url = `https://outlook.live.com/mail/0/deeplink/compose?subject=${subject}&body=${body}`;
-                break;
-            case 'yahoo':
-                url = `https://compose.mail.yahoo.com/?subject=${subject}&body=${body}`;
-                break;
         }
 
-        window.open(url, '_blank');
-    }
+        function initMap() {
+            map = L.map('map').setView([37.8, -96], 4);
+            L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+                attribution: '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
+            }).addTo(map);
 
-    updateStory();
-</script>
+            map.on('click', function(e) {
+                findRepresentatives(e.latlng.lat, e.latlng.lng);
+            });
+        }
+
+        function findRepresentatives(lat, lng) {
+            const apiKey = 'YOUR_OPENSTATES_API_KEY'; // Replace with your actual OpenStates API key
+            const url = `https://v3.openstates.org/people.geo?lat=${lat}&lng=${lng}&apikey=${apiKey}`;
+            
+            fetch(url)
+                .then(response => response.json())
+                .then(data => {
+                    displayRepresentatives(data.results);
+                })
+                .catch(error => {
+                    console.error('Error:', error);
+                    document.getElementById('representatives-list').innerHTML = 'Error finding representatives. Please try again.';
+                });
+        }
+
+        function displayRepresentatives(representatives) {
+            const repList = document.getElementById('representatives-list');
+            repList.innerHTML = '<h3>Your Representatives:</h3>';
+            representatives.forEach(rep => {
+                repList.innerHTML += `
+                    <div>
+                        <h4>${rep.name}</h4>
+                        <p>Role: ${rep.current_role.title}</p>
+                        <p>Party: ${rep.party}</p>
+                        <p>Email: ${rep.email || 'Not available'}</p>
+                        <a href="${rep.openstates_url}" target="_blank">More Info</a>
+                    </div>
+                `;
+            });
+        }
+
+        function copyTemplate() {
+            const copyText = document.getElementById("letter-template");
+            copyText.select();
+            document.execCommand("copy");
+            alert("Letter template copied to clipboard! You can now paste it into your email to your representative.");
+        }
+
+        // Initialize the story
+        document.addEventListener('DOMContentLoaded', (event) => {
+            revealNextChapter();
+        });
+    </script>
+</body>
+</html>
