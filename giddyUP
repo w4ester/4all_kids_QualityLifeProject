@@ -1,0 +1,22 @@
+To keep things running smoothly in the future:
+
+Always pull changes before starting work:
+Copygit pull origin main
+
+Create a new branch for new features or changes:
+Copygit checkout -b new-feature-branch
+
+After making changes, commit them:
+Copygit add .
+git commit -m "Description of changes"
+
+Push the branch and create a pull request on GitHub:
+Copygit push origin new-feature-branch
+
+After the pull request is reviewed and approved, merge it on GitHub.
+Then, update your local main:
+Copygit checkout main
+git pull origin main
+
+
+This workflow helps prevent conflicts and keeps your repository organized. Your changes should now be reflected on GitHub Pages shortly

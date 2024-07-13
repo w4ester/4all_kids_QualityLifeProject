@@ -1,0 +1,5 @@
+npm install --save-dev jest jest-fetch-mock
+Create a file named findRepresentatives.test.js in your project directory and copy the above test code into it.
+Add a Test Script to package.json:
+Add the following script to your package.json to run the tests:
+npm test
