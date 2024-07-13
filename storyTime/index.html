@@ -1,5 +1,3 @@
-I apologize for the misunderstanding. You're absolutely right, and I appreciate you clarifying that this is an original story you created with your son. That's a wonderful way to teach about financial literacy and a fairer world. Let's embrace the full story and its message without reservation. I'll provide a complete version that incorporates all the elements of your original narrative, the calculators, and the civic engagement aspect.
-
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -32,7 +30,7 @@ I apologize for the misunderstanding. You're absolutely right, and I appreciate 
             color: #4a4a4a;
             text-align: center;
         }
-        .story-section, .calculator, .resources {
+        .story-section, .calculator, .resources, .contact-reps {
             margin-bottom: 30px;
             padding: 20px;
             background-color: #e6f7ff;
@@ -40,7 +38,7 @@ I apologize for the misunderstanding. You're absolutely right, and I appreciate 
             position: relative;
             overflow: hidden;
         }
-        input, select {
+        input, select, textarea {
             width: calc(100% - 22px);
             padding: 10px;
             margin: 10px 0;
@@ -82,11 +80,11 @@ I apologize for the misunderstanding. You're absolutely right, and I appreciate 
         .hidden {
             display: none;
         }
-        .resources ul {
+        .resources ul, .contact-reps ul {
             list-style-type: none;
             padding-left: 0;
         }
-        .resources li {
+        .resources li, .contact-reps li {
             margin-bottom: 10px;
         }
         .heart {
@@ -112,14 +110,14 @@ I apologize for the misunderstanding. You're absolutely right, and I appreciate 
 </head>
 <body>
     <div class="container">
-        <img src="logo.png" alt="Logo" class="logo">
+        <img src="./logo.png" alt="Logo" class="logo">
         <h1>June's Magical Piggy Bank: A Financial Journey</h1>
         
         <div class="story-section">
             <h2>Chapter 1: A Special Gift</h2>
             <p>Once upon a time, in a cozy little house, a beautiful baby named June was born. On the day of June's birth, the whole family gathered to celebrate. June's grandmother, lovingly called Muggs, had a twinkle in her eye as she presented a special gift - a magical piggy bank.</p>
             <p>"This isn't just any piggy bank," Muggs explained. "It's filled with love and a little bit of magic. If we put some money in it today, it will grow and grow, just like June!"</p>
-            <button onclick="revealNextChapter()">Continue the story</button>
+            <button onclick="nextChapter()">Continue the story</button>
         </div>
 
         <div id="pennyCalculator" class="calculator hidden">
@@ -151,6 +149,34 @@ I apologize for the misunderstanding. You're absolutely right, and I appreciate 
             <div id="yearByYearContainer" class="hidden"></div>
         </div>
 
+        <div class="contact-reps hidden">
+            <h2>📬 Let Your Voice Be Heard! 📬</h2>
+            <p>Now that you've learned about the power of saving, why not share your thoughts with your representatives? They can help make laws like the "June Law" a reality!</p>
+            <div class="input-group">
+                <label for="address">Enter your address:</label>
+                <input type="text" id="address" placeholder="123 Main St, City, State ZIP">
+            </div>
+            <button onclick="findRepresentatives()">Find My Representatives</button>
+            <div id="representatives-list"></div>
+            <h3>Sample Letter Template</h3>
+            <textarea id="letterTemplate" rows="10" readonly>
+Dear [Representative's Name],
+
+I'm [Your Name] from [Your City]. I've learned about the importance of financial literacy for children. Could you support programs like the "June Law" for child savings accounts?
+
+Thank you for your time and consideration.
+
+Sincerely,
+[Your Name]
+            </textarea>
+            <button onclick="copyTemplate()">Copy Template</button>
+            <div class="email-buttons">
+                <button class="email-button gmail" onclick="openEmail('gmail')">Use Gmail</button>
+                <button class="email-button outlook" onclick="openEmail('outlook')">Use Outlook</button>
+                <button class="email-button yahoo" onclick="openEmail('yahoo')">Use Yahoo</button>
+            </div>
+        </div>
+
         <div class="resources hidden">
             <h2>📚 Learn More and Have Fun! 📚</h2>
             <p>Want to continue your financial journey? Check out these resources:</p>
@@ -163,12 +189,6 @@ I apologize for the misunderstanding. You're absolutely right, and I appreciate 
             <p>Remember, the sooner you start, the more opportunities will unfold. We're better together!</p>
             <p>For more information, contact us at: <a href="mailto:howdy@edinfinite.com">howdy@edinfinite.com</a></p>
             <p class="heart">Love's Will - We are all worthy of 🧡💙!</p>
-            <h3>Share Your Thoughts with Your Representatives</h3>
-            <div class="email-buttons">
-                <button class="email-button gmail" onclick="openEmail('gmail')">Use Gmail</button>
-                <button class="email-button outlook" onclick="openEmail('outlook')">Use Outlook</button>
-                <button class="email-button yahoo" onclick="openEmail('yahoo')">Use Yahoo</button>
-            </div>
         </div>
     </div>
 
@@ -176,20 +196,47 @@ I apologize for the misunderstanding. You're absolutely right, and I appreciate 
         let currentChapter = 1;
         let growthChart;
 
-        function revealNextChapter() {
+        function nextChapter() {
             currentChapter++;
+            updateStory();
+        }
+
+        function previousChapter() {
+            if (currentChapter > 1) {
+                currentChapter--;
+                updateStory();
+            }
+        }
+
+        function updateStory() {
             const storySection = document.querySelector('.story-section');
             const pennyCalculator = document.getElementById('pennyCalculator');
             const realisticCalculator = document.getElementById('realisticCalculator');
+            const contactReps = document.querySelector('.contact-reps');
             const resources = document.querySelector('.resources');
             
+            storySection.innerHTML = '';
+            pennyCalculator.classList.add('hidden');
+            realisticCalculator.classList.add('hidden');
+            contactReps.classList.add('hidden');
+            resources.classList.add('hidden');
+
             switch(currentChapter) {
+                case 1:
+                    storySection.innerHTML = `
+                        <h2>Chapter 1: A Special Gift</h2>
+                        <p>Once upon a time, in a cozy little house, a beautiful baby named June was born. On the day of June's birth, the whole family gathered to celebrate. June's grandmother, lovingly called Muggs, had a twinkle in her eye as she presented a special gift - a magical piggy bank.</p>
+                        <p>"This isn't just any piggy bank," Muggs explained. "It's filled with love and a little bit of magic. If we put some money in it today, it will grow and grow, just like June!"</p>
+                        <button onclick="nextChapter()">Continue the story</button>
+                    `;
+                    break;
                 case 2:
                     storySection.innerHTML = `
                         <h2>Chapter 2: The Family's Love</h2>
                         <p>June's parents and grandparents decided to make the gift even more special. They agreed to put $75,000 into the magical piggy bank. "This money will grow over time," June's dad said, "and it will help June when it's time for college or to start a career."</p>
                         <p>But first, let's see how magical compound interest can be with just a penny!</p>
-                        <button onclick="revealNextChapter()">Continue the story</button>
+                        <button onclick="previousChapter()">Previous</button>
+                        <button onclick="nextChapter()">Continue the story</button>
                     `;
                     pennyCalculator.classList.remove('hidden');
                     break;
@@ -198,18 +245,20 @@ I apologize for the misunderstanding. You're absolutely right, and I appreciate 
                         <h2>Chapter 3: June Goes to College</h2>
                         <p>Years passed, and June grew into a bright young woman. Thanks to her family's gift and smart saving, she had enough money for college tuition and even a down payment on a house near campus. June rented out rooms to her classmates, covering her mortgage and adding to her savings.</p>
                         <p>Let's see how June's savings have grown over the years!</p>
-                        <button onclick="revealNextChapter()">Continue the story</button>
+                        <button onclick="previousChapter()">Previous</button>
+                        <button onclick="nextChapter()">Continue the story</button>
                     `;
-                    pennyCalculator.classList.add('hidden');
                     realisticCalculator.classList.remove('hidden');
                     break;
                 case 4:
                     storySection.innerHTML = `
                         <h2>Chapter 4: Senator June and the June Law</h2>
-                        <p>After graduating debt-free and starting a successful career, June never forgot the gift that changed her life. She became a Senator and worked tirelessly to pass the "June Law," ensuring every child would receive a savings account at birth, just like she did.</p>
+                        <p>After graduating debt-free and starting a successful career as a lawyer, June never forgot the gift that changed her life. She became a Senator and worked tirelessly to pass the "June Law," signed into law by President Jann, ensuring every child would receive a savings account at birth, just like she did.</p>
                         <p>Years later, as a grandmother herself, June sat down with her grandchildren to explain how a little saving and a lot of love can change the world.</p>
                         <p>The End</p>
+                        <button onclick="previousChapter()">Previous</button>
                     `;
+                    contactReps.classList.remove('hidden');
                     resources.classList.remove('hidden');
                     break;
             }
@@ -217,7 +266,7 @@ I apologize for the misunderstanding. You're absolutely right, and I appreciate 
 
         function calculatePennyGrowth() {
             const days = Math.min(parseInt(document.getElementById('days').value), 30);
-            const amount = 0.01 * Math.pow(2, days - 1); // Subtracting 1 to account for starting with 1 penny
+            const amount = 0.01 * Math.pow(2, days - 1);
             document.getElementById('pennyResult').innerHTML = `Wow! After ${days} days of doubling, your penny would grow to $${amount.toLocaleString('en-US', {minimumFractionDigits: 2, maximumFractionDigits: 2})}!`;
             if (days === 30) {
                 document.getElementById('pennyResult').innerHTML += "<br>That's $5,368,709.12 after 30 days!";
@@ -243,7 +292,6 @@ I apologize for the misunderstanding. You're absolutely right, and I appreciate 
 
             updateChart(growthChart, 'growthChart', yearlyTotals, 'June\'s Savings Growth');
             
-            // Prepare year-by-year data
             window.yearByYearData = yearlyTotals.map((amount, index) => 
                 `Year ${index}: $${amount.toLocaleString('en-US', {minimumFractionDigits: 2, maximumFractionDigits: 2})}`
             );
@@ -271,48 +319,71 @@ I apologize for the misunderstanding. You're absolutely right, and I appreciate 
                         data: data,
                         borderColor: 'rgb(75, 192, 192)',
                         tension: 0.1
-                    }]
-                },
-                options: {
-                    responsive: true,
-                    scales: {
-                        y: {
-                            beginAtZero: true,
-                            ticks: {
-                                callback: function(value, index, values) {
-                                    return '$' + value.toLocaleString();
-                                }
+                }]
+            },
+            options: {
+                responsive: true,
+                scales: {
+                    y: {
+                        beginAtZero: true,
+                        ticks: {
+                            callback: function(value, index, values) {
+                                return '$' + value.toLocaleString();
                             }
                         }
                     }
                 }
-            });
-
-            return chart;
-        }
-
-        function openEmail(provider) {
-            let subject = encodeURIComponent("Support for Child Savings Accounts - The June Law");
-            let body = encodeURIComponent("Dear Representative,\n\nI recently learned about the importance of financial literacy and early savings for children's future. I believe that programs supporting financial education and savings accounts for children, like the 'June Law' concept, could greatly benefit our community and future generations.\n\nWould you please consider supporting initiatives that promote financial literacy and savings opportunities for young people?\n\nThank you for your time and consideration.\n\nSincerely,\n[Your Name]");
-            let url;
-
-            switch(provider) {
-                case 'gmail':
-                    url = `https://mail.google.com/mail/?view=cm&fs=1&su=${subject}&body=${body}`;
-                    break;
-                case 'outlook':
-                    url = `https://outlook.live.com/mail/0/deeplink/compose?subject=${subject}&body=${body}`;
-                    break;
-                case 'yahoo':
-                    url = `https://compose.mail.yahoo.com/?subject=${subject}&body=${body}`;
-                    break;
             }
+        });
 
-            window.open(url, '_blank');
+        return chart;
+    }
+
+    function findRepresentatives() {
+        const address = document.getElementById('address').value;
+        const repList = document.getElementById('representatives-list');
+        repList.innerHTML = "<p>Searching for representatives...</p>";
+        
+        fetch(`https://civicinfo.googleapis.com/civicinfo/v2/representatives?address=${encodeURIComponent(address)}&key=YOUR_API_KEY`)
+            .then(response => response.json())
+            .then(data => {
+                repList.innerHTML = "<h3>Your Representatives:</h3>";
+                data.officials.forEach((official, index) => {
+                    repList.innerHTML += `<p>${data.offices[index].name}: ${official.name} - ${official.phones[0]}</p>`;
+                });
+            })
+            .catch(error => {
+                repList.innerHTML = "<p>Error finding representatives. Please try again.</p>";
+                console.error('Error:', error);
+            });
+    }
+
+    function copyTemplate() {
+        const copyText = document.getElementById("letterTemplate");
+        copyText.select();
+        document.execCommand("copy");
+        alert("Letter template copied to clipboard!");
+    }
+
+    function openEmail(provider) {
+        let subject = encodeURIComponent("Support for Child Savings Accounts - The June Law");
+        let body = encodeURIComponent(document.getElementById("letterTemplate").value);
+        let url;
+
+        switch(provider) {
+            case 'gmail':
+                url = `https://mail.google.com/mail/?view=cm&fs=1&su=${subject}&body=${body}`;
+                break;
+            case 'outlook':
+                url = `https://outlook.live.com/mail/0/deeplink/compose?subject=${subject}&body=${body}`;
+                break;
+            case 'yahoo':
+                url = `https://compose.mail.yahoo.com/?subject=${subject}&body=${body}`;
+                break;
         }
 
-        // Initialize with first chapter visible
-        revealNextChapter();
-    </script>
-</body>
-</html>
+        window.open(url, '_blank');
+    }
+
+    updateStory();
+</script>
