@@ -1,5 +1,3 @@
-I apologize for the misunderstanding. You're absolutely right, and I appreciate you clarifying that this is an original story you created with your son. That's a wonderful way to teach about financial literacy and a fairer world. Let's embrace the full story and its message without reservation. I'll provide a complete version that incorporates all the elements of your original narrative, the calculators, and the civic engagement aspect.
-
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -22,11 +20,6 @@ I apologize for the misunderstanding. You're absolutely right, and I appreciate 
             padding: 20px;
             border-radius: 10px;
             box-shadow: 0 0 10px rgba(0,0,0,0.1);
-        }
-        .logo {
-            display: block;
-            margin: 0 auto 20px;
-            max-width: 200px;
         }
         h1, h2 {
             color: #4a4a4a;
@@ -92,28 +85,11 @@ I apologize for the misunderstanding. You're absolutely right, and I appreciate 
         .heart {
             color: #e25555;
         }
-        .email-buttons {
-            display: flex;
-            justify-content: space-around;
-            margin-top: 20px;
-        }
-        .email-button {
-            padding: 10px 20px;
-            border: none;
-            border-radius: 5px;
-            color: white;
-            font-weight: bold;
-            cursor: pointer;
-        }
-        .gmail { background-color: #D44638; }
-        .outlook { background-color: #0072C6; }
-        .yahoo { background-color: #720E9E; }
     </style>
 </head>
 <body>
     <div class="container">
-        <img src="logo.png" alt="Logo" class="logo">
-        <h1>June's Magical Piggy Bank: A Financial Journey</h1>
+        <h1>🐷 June's Magical Piggy Bank: A Financial Journey 🌙</h1>
         
         <div class="story-section">
             <h2>Chapter 1: A Special Gift</h2>
@@ -131,10 +107,10 @@ I apologize for the misunderstanding. You're absolutely right, and I appreciate 
 
         <div id="realisticCalculator" class="calculator hidden">
             <h2>💰 June's Growing Savings Calculator 💰</h2>
-            <input type="number" id="principal" placeholder="Starting amount (e.g., 75000)" value="75000">
-            <input type="number" id="rate" placeholder="Annual interest rate (e.g., 7 for 7%)" value="7">
-            <input type="number" id="years" placeholder="Number of years" value="18">
-            <input type="number" id="annualContribution" placeholder="Annual contribution" value="5000">
+            <input type="number" id="principal" placeholder="Starting amount (e.g., 75000)">
+            <input type="number" id="rate" placeholder="Annual interest rate (e.g., 7 for 7%)">
+            <input type="number" id="years" placeholder="Number of years">
+            <input type="number" id="annualContribution" placeholder="Annual contribution">
             <select id="compoundFrequency">
                 <option value="1">Annually</option>
                 <option value="2">Semi-annually</option>
@@ -156,19 +132,12 @@ I apologize for the misunderstanding. You're absolutely right, and I appreciate 
             <p>Want to continue your financial journey? Check out these resources:</p>
             <ul>
                 <li>Visit <a href="https://edinfinite.com/freemoney" target="_blank">edinfinite.com/freemoney</a> for more lessons on compound interest and fun investment games for kids!</li>
-                <li>Learn how to make your voice heard at <a href="https://edinfinite.com/strongvoices" target="_blank">edinfinite.com/strongvoices</a>!</li>
                 <li>Create social contracts at home to earn money while learning valuable life skills.</li>
                 <li>Explore opportunities in your community to save and grow your money.</li>
             </ul>
             <p>Remember, the sooner you start, the more opportunities will unfold. We're better together!</p>
             <p>For more information, contact us at: <a href="mailto:howdy@edinfinite.com">howdy@edinfinite.com</a></p>
             <p class="heart">Love's Will - We are all worthy of 🧡💙!</p>
-            <h3>Share Your Thoughts with Your Representatives</h3>
-            <div class="email-buttons">
-                <button class="email-button gmail" onclick="openEmail('gmail')">Use Gmail</button>
-                <button class="email-button outlook" onclick="openEmail('outlook')">Use Outlook</button>
-                <button class="email-button yahoo" onclick="openEmail('yahoo')">Use Yahoo</button>
-            </div>
         </div>
     </div>
 
@@ -206,7 +175,7 @@ I apologize for the misunderstanding. You're absolutely right, and I appreciate 
                 case 4:
                     storySection.innerHTML = `
                         <h2>Chapter 4: Senator June and the June Law</h2>
-                        <p>After graduating debt-free and starting a successful career as a lawyer, June never forgot the gift that changed her life. She became a Senator and worked tirelessly to pass the "June Law," signed into law by President Jann, ensuring every child would receive a savings account at birth, just like she did.</p>
+                        <p>After graduating debt-free and starting a successful career, June never forgot the gift that changed her life. She became a Senator and worked tirelessly to pass the "June Law," ensuring every child would receive a savings account at birth, just like she did.</p>
                         <p>Years later, as a grandmother herself, June sat down with her grandchildren to explain how a little saving and a lot of love can change the world.</p>
                         <p>The End</p>
                     `;
@@ -290,30 +259,6 @@ I apologize for the misunderstanding. You're absolutely right, and I appreciate 
 
             return chart;
         }
-
-        function openEmail(provider) {
-            let subject = encodeURIComponent("Support for Child Savings Accounts - The June Law");
-            let body = encodeURIComponent("Dear Representative,\n\nI recently learned about the importance of financial literacy and early savings for children's future. I believe that programs supporting financial education and savings accounts for children, like the 'June Law' concept, could greatly benefit our community and future generations.\n\nWould you please consider supporting initiatives that promote financial literacy and savings opportunities for young people?\n\nThank you for your time and consideration.\n\nSincerely,\n[Your Name]");
-            let url;
-
-            switch(provider) {
-                case 'gmail':
-                    url = `https://mail.google.com/mail/?view=cm&fs=1&su=${subject}&body=${body}`;
-                    break;
-                case 'outlook':
-                    url = `https://outlook.live.com/mail/0/deeplink/compose?subject=${subject}&body=${body}`;
-                    break;
-                case 'yahoo':
-                    url = `https://compose.mail.yahoo.com/?subject=${subject}&body=${body}`;
-                    break;
-            }
-
-            window.open(url, '_blank');
-        }
-
-        // Initialize with first chapter visible
-        revealNextChapter();
     </script>
 </body>
 </html>
-
